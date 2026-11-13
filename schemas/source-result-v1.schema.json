@@ -1,0 +1,171 @@
+{
+  "$id": "source-result-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "anchor_reached": {
+      "type": "boolean"
+    },
+    "cursor": {
+      "anyOf": [
+        {
+          "maxLength": 20000,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "has_more": {
+      "type": "boolean"
+    },
+    "host_id": {
+      "maxLength": 20000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "next_cursor": {
+      "anyOf": [
+        {
+          "maxLength": 20000,
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scan_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    },
+    "source_id": {
+      "maxLength": 20000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "turns": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "drafts": {
+            "items": {
+              "$ref": "draft-v1.schema.json"
+            },
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "item_id": {
+                  "maxLength": 20000,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sha256": {
+                  "pattern": "^[0-9a-f]{64}$",
+                  "type": "string"
+                },
+                "text": {
+                  "maxLength": 20000,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "item_id",
+                "text",
+                "sha256"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "outcome": {
+            "enum": [
+              "generated",
+              "no_record",
+              "needs_review"
+            ]
+          },
+          "reason": {
+            "maxLength": 20000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "started_at": {
+            "format": "date-time",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}:\\d{2})$",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "completed",
+              "in_progress",
+              "failed"
+            ]
+          },
+          "turn_id": {
+            "maxLength": 20000,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "turn_id",
+          "started_at",
+          "status",
+          "items",
+          "outcome",
+          "reason",
+          "drafts"
+        ],
+        "type": "object"
+      },
+      "maxItems": 50,
+      "type": "array"
+    },
+    "window": {
+      "additionalProperties": false,
+      "properties": {
+        "since": {
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}:\\d{2})$",
+          "type": "string"
+        },
+        "until": {
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}:\\d{2})$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "since",
+        "until"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_id",
+    "host_id",
+    "scan_id",
+    "window",
+    "cursor",
+    "next_cursor",
+    "has_more",
+    "anchor_reached",
+    "turns"
+  ],
+  "title": "source-result-v1",
+  "type": "object"
+}

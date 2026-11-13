@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>拾序 · 个人进度看板</title><link rel="stylesheet" href="./styles.css"><script src="./app.js" defer></script></head>
+<body>
+<a class="skip-link" href="#workspace">跳到项目内容</a>
+<div class="shell" id="shell">
+<aside class="sidebar" aria-label="看板导航">
+<a class="brand" href="./"><span class="brand-mark" aria-hidden="true">拾</span><span>拾序<small>个人工作记忆</small></span></a>
+<p class="nav-caption">工作领域</p>
+<nav id="categories" class="categories" aria-label="按领域筛选">
+<button type="button" data-category="all" aria-pressed="true"><span>全部项目</span><span class="count">0</span></button>
+<button type="button" data-category="research" aria-pressed="false"><span>科研</span><span class="count">0</span></button>
+<button type="button" data-category="part_time" aria-pressed="false"><span>兼职</span><span class="count">0</span></button>
+<button type="button" data-category="internship" aria-pressed="false"><span>实习</span><span class="count">0</span></button>
+<button type="button" data-category="other" aria-pressed="false"><span>其他</span><span class="count">0</span></button>
+</nav>
+<div class="sidebar-note"><span class="note-dot" aria-hidden="true"></span><p>把发生过的工作留下，<br>让下一步更清楚。</p></div>
+</aside>
+<main id="workspace" tabindex="-1">
+<header class="page-header"><div><p class="eyebrow">YOUR WORK, IN CONTEXT</p><h1>每一步，都有迹可循。</h1><p class="subtitle">回顾进展，找到下一步，从这里继续。</p></div><button type="button" id="open-record" class="primary"><span aria-hidden="true">＋</span> 记录进度</button></header>
+<div id="preview-banner" class="preview-banner" hidden></div>
+<div class="overview" id="overview" aria-label="项目状态概览"><div><span>全部项目</span><strong id="stat-total">—</strong></div><div><span>进行中</span><strong id="stat-active">—</strong></div><div><span>受阻</span><strong id="stat-blocked">—</strong></div><div><span>已完成</span><strong id="stat-done">—</strong></div></div>
+<div id="load-error" class="error-box" role="alert" hidden><p id="load-error-text"></p><button type="button" id="retry-load">重新加载</button></div>
+<section class="workspace-panel" aria-label="进度浏览">
+<div class="view-tabs" role="tablist" aria-label="浏览方式"><button type="button" id="tab-projects" role="tab" aria-selected="true" aria-controls="panel-projects" tabindex="0">项目概览</button><button type="button" id="tab-timeline" role="tab" aria-selected="false" aria-controls="panel-timeline" tabindex="-1">全局时间轴</button></div>
+<div class="filter-bar"><div class="search-field"><label for="search" class="sr-only">搜索项目、历史进展或下一步</label><span aria-hidden="true">⌕</span><input type="search" id="search" placeholder="搜索项目、历史进展或下一步" autocomplete="off" maxlength="200"></div><div class="status-field"><label for="status-filter" class="sr-only">项目当前状态</label><select id="status-filter"><option value="all">所有状态</option><option value="active">进行中</option><option value="blocked">受阻</option><option value="planned">待开始</option><option value="paused">暂停</option><option value="done">已完成</option><option value="unknown">尚无已确认状态</option></select></div><button type="button" id="clear-filters" class="quiet">清除筛选</button></div>
+<div class="results-line"><p id="results" role="status" aria-live="polite">正在读取记录…</p><span>状态以已确认记录为准</span></div>
+<div id="panel-projects" role="tabpanel" aria-labelledby="tab-projects"><div id="projects" class="project-grid" aria-busy="true"></div></div>
+<div id="panel-timeline" role="tabpanel" aria-labelledby="tab-timeline" hidden><p class="timeline-hint">显示筛选命中项目的全部记录。按发生日期分组，时间未记录的事项单列；分组位置不代表真实先后。</p><div id="timeline"></div></div>
+</section>
+<footer><div id="data-meta">尚未载入数据</div><div><span id="build-meta"></span><a id="actions-link" hidden target="_blank" rel="noopener noreferrer">查看构建记录 ↗</a><span id="actions-unavailable">构建记录：尚未配置</span></div><p>长期未更新仅保留最后录入日期，不推断项目失败。</p></footer>
+</main>
+</div>
+<dialog id="history-dialog" aria-labelledby="history-title" class="history-dialog">
+<div class="dialog-header"><div><p id="history-category" class="eyebrow"></p><h2 id="history-title">项目历史</h2></div><button type="button" class="icon-button" data-close="history-dialog" aria-label="关闭项目历史">×</button></div>
+<div class="dialog-body"><div id="history-summary"></div><div class="section-heading"><h3>项目历史</h3><button type="button" id="history-record" class="secondary">记录这个项目</button></div><div id="history-records"></div></div>
+</dialog>
+<dialog id="record-dialog" aria-labelledby="record-title" class="record-dialog">
+<div class="dialog-header"><div><p class="eyebrow">留下这一段进展</p><h2 id="record-title">记录进度</h2></div><button type="button" class="icon-button" data-close="record-dialog" aria-label="关闭记录进度">×</button></div>
+<div class="dialog-body">
+<p class="record-intro">先保存为本地草稿，核对后再发布。这里不会上传或自动保存输入内容。</p>
+<div class="mode-tabs" role="tablist" aria-label="记录方式"><button type="button" role="tab" id="mode-current" aria-selected="true" aria-controls="record-current" tabindex="0" data-mode="current">当前聊天记录</button><button type="button" role="tab" id="mode-scan" aria-selected="false" aria-controls="record-scan" tabindex="-1" data-mode="scan">按需补扫</button><button type="button" role="tab" id="mode-manual" aria-selected="false" aria-controls="record-manual" tabindex="-1" data-mode="manual">手动填写</button></div>
+<div class="project-input"><label for="record-project">记录到哪个项目</label><select id="record-project"><option value="">请选择项目</option><option value="__custom__">输入项目代号…</option></select><div id="custom-project-wrap" hidden><label for="custom-project">项目代号</label><input id="custom-project" placeholder="例如 proj_research" maxlength="100" autocomplete="off"><p class="help">新项目需要先让 Agent 创建本地注册表草稿；页面不会创建正式项目。</p></div></div>
+<section id="record-current" role="tabpanel" aria-labelledby="mode-current"><p>把下面的指令复制到正在工作的聊天，让 Agent 利用当前上下文整理记录。</p><button type="button" class="secondary" id="make-current">生成记录指令</button></section>
+<section id="record-scan" role="tabpanel" aria-labelledby="mode-scan" hidden><p>让进度管理 Agent 按本地来源映射读取指定聊天。来源不明时先定位，不做全量扫描。</p><div class="field-grid"><div><label for="scan-since">开始日期（上海）</label><input type="date" id="scan-since"></div><div><label for="scan-until">结束日期（含当日）</label><input type="date" id="scan-until"></div></div><button type="button" class="secondary" id="make-scan">生成补扫指令</button></section>
+<div id="instruction-result" hidden><label for="instruction-text">交给 Agent 的指令</label><textarea id="instruction-text" rows="9" readonly></textarea><button type="button" id="copy-instruction" class="secondary">复制指令</button><p class="help" id="copy-status" role="status"></p></div>
+<section id="record-manual" role="tabpanel" aria-labelledby="mode-manual" hidden>
+<form id="manual-form" autocomplete="off">
+<label for="record-type">记录类型</label><select id="record-type"><option value="progress">工作进展</option><option value="state_update">仅更新项目状态</option></select>
+<div class="field-grid"><div><label for="occurred-precision">发生时间精度</label><select id="occurred-precision"><option value="date">只知道日期</option><option value="instant">知道具体时间（上海）</option></select></div><div><label for="occurred-at">工作发生时间</label><input type="date" id="occurred-at" required></div></div>
+<label for="summary">发生了什么</label><textarea id="summary" rows="3" maxlength="20000" required placeholder="写下已经发生的工作，或明确的状态变化"></textarea>
+<label class="check-label"><input type="checkbox" id="has-snapshot">同时记录有依据的项目状态</label>
+<fieldset id="snapshot-fields" disabled hidden><legend>完整状态快照</legend>
+<label for="snapshot-status">项目状态</label><select id="snapshot-status"><option value="active">进行中</option><option value="blocked">受阻</option><option value="planned">待开始</option><option value="paused">暂停</option><option value="done">已完成</option></select>
+<div class="field-grid"><div><label for="state-precision">状态时间精度</label><select id="state-precision"><option value="date">只知道日期</option><option value="instant">知道具体时间（上海）</option></select></div><div><label for="state-as-of">状态证据有效时间</label><input type="date" id="state-as-of" required></div></div>
+<p class="help">填写证据对应的时间；补录日期不等于状态生效日期。</p>
+<label for="next-step">下一步（可留空）</label><textarea id="next-step" rows="2" maxlength="20000"></textarea><label for="blocker">阻塞（可留空）</label><textarea id="blocker" rows="2" maxlength="20000"></textarea>
+</fieldset>
+<label for="evidence">依据或私人备注</label><textarea id="evidence" rows="2" maxlength="20000" required placeholder="说明这条记录的依据；此字段只进入本地草稿"></textarea>
+<label class="check-label"><input type="checkbox" id="verified">我已核对上述事实和状态</label><p class="help">未勾选时保存为“待核实”。公开摘要仍需在本地预览审批。</p>
+<div class="form-actions"><button type="submit" class="primary">下载 JSON 草稿</button><button type="button" id="new-draft" class="quiet">清空并另记一条</button></div>
+</form>
+<div id="draft-result" hidden><p id="draft-status" role="status"></p><label for="draft-json">草稿内容（下载不可用时可复制保存）</label><textarea id="draft-json" rows="7" readonly></textarea><p class="help">下载后交给本地 import.py 导入，再生成审批预览。同一条记录重复下载保留同一 ID；另记一条请点击“清空并另记一条”。</p></div>
+</section>
+<p id="record-error" class="error-box" role="alert" hidden></p>
+</div>
+</dialog>
+</body></html>

@@ -1,0 +1,46 @@
+{
+  "$id": "public-project-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "aliases": {
+      "items": {
+        "maxLength": 20000,
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "category": {
+      "enum": [
+        "research",
+        "part_time",
+        "internship",
+        "other"
+      ]
+    },
+    "project_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+      "type": "string"
+    },
+    "public_name": {
+      "maxLength": 20000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_version",
+    "project_id",
+    "public_name",
+    "category",
+    "aliases"
+  ],
+  "title": "public-project-v1",
+  "type": "object"
+}

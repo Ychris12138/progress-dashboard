@@ -1,0 +1,9 @@
+dist/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.DS_Store
+node_modules/
+npm-debug.log*
+*.local.json

@@ -1,0 +1,159 @@
+{
+  "$id": "approval-manifest-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base_commit": {
+      "anyOf": [
+        {
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "base_public": {
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(public/projects\\.json|public/records/\\d{4}/\\d{2}/\\d{2}\\.json)$": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "batch_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}:\\d{2})$",
+      "type": "string"
+    },
+    "draft_ids": {
+      "items": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "files": {
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(public/projects\\.json|public/records/\\d{4}/\\d{2}/\\d{2}\\.json)$": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "operations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "enum": [
+              "add",
+              "modify",
+              "delete"
+            ]
+          },
+          "new_sha256": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "old_sha256": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "path": {
+            "pattern": "^(public/projects\\.json|public/records/\\d{4}/\\d{2}/\\d{2}\\.json)$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "action",
+          "old_sha256",
+          "new_sha256"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "preview_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "record_ids": {
+      "items": {
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": {
+          "const": "main"
+        },
+        "repository": {
+          "anyOf": [
+            {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "repository",
+        "branch"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "batch_id",
+    "created_at",
+    "target",
+    "base_commit",
+    "base_public",
+    "draft_ids",
+    "operations",
+    "files",
+    "preview_sha256",
+    "record_ids"
+  ],
+  "title": "approval-manifest-v1",
+  "type": "object"
+}

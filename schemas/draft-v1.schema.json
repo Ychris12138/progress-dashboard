@@ -1,0 +1,357 @@
+{
+  "$id": "draft-v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "else": {
+        "properties": {
+          "state_snapshot": {
+            "additionalProperties": false,
+            "properties": {
+              "blocker": {
+                "anyOf": [
+                  {
+                    "maxLength": 20000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "next_step": {
+                "anyOf": [
+                  {
+                    "maxLength": 20000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "enum": [
+                  "planned",
+                  "active",
+                  "blocked",
+                  "paused",
+                  "done"
+                ]
+              }
+            },
+            "required": [
+              "status",
+              "next_step",
+              "blocker"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "state_as_of": {
+            "type": "null"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "state_snapshot": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "record_type": {
+            "const": "state_update"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "state_as_of": {
+            "oneOf": [
+              {
+                "format": "date",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "type": "string"
+              },
+              {
+                "format": "date-time",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}:\\d{2})$",
+                "type": "string"
+              }
+            ]
+          },
+          "state_snapshot": {
+            "additionalProperties": false,
+            "properties": {
+              "blocker": {
+                "anyOf": [
+                  {
+                    "maxLength": 20000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "next_step": {
+                "anyOf": [
+                  {
+                    "maxLength": 20000,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "status": {
+                "enum": [
+                  "planned",
+                  "active",
+                  "blocked",
+                  "paused",
+                  "done"
+                ]
+              }
+            },
+            "required": [
+              "status",
+              "next_step",
+              "blocker"
+            ],
+            "type": "object"
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "draft_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+      "type": "string"
+    },
+    "evidence": {
+      "maxLength": 20000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "occurred_at": {
+      "oneOf": [
+        {
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "type": "string"
+        },
+        {
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}:\\d{2})$",
+          "type": "string"
+        }
+      ]
+    },
+    "project_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+      "type": "string"
+    },
+    "record_type": {
+      "enum": [
+        "progress",
+        "state_update"
+      ]
+    },
+    "revision": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "correct_occurred_at": {
+              "type": "boolean"
+            },
+            "correct_state_as_of": {
+              "type": "boolean"
+            },
+            "target_record_id": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,99}$",
+              "type": "string"
+            }
+          },
+          "required": [
+            "target_record_id",
+            "correct_occurred_at",
+            "correct_state_as_of"
+          ],
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    },
+    "source": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "content_sha256": {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            "item_ids": {
+              "items": {
+                "maxLength": 20000,
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "source_id": {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "turn_id": {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            },
+            "unit_id": {
+              "maxLength": 20000,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "source_id",
+            "turn_id",
+            "item_ids",
+            "unit_id",
+            "content_sha256"
+          ],
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "state_as_of": {
+      "anyOf": [
+        {
+          "oneOf": [
+            {
+              "format": "date",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "type": "string"
+            },
+            {
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?(?:Z|[+-]\\d{2}:\\d{2})$",
+              "type": "string"
+            }
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "state_snapshot": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "blocker": {
+              "anyOf": [
+                {
+                  "maxLength": 20000,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "next_step": {
+              "anyOf": [
+                {
+                  "maxLength": 20000,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "status": {
+              "enum": [
+                "planned",
+                "active",
+                "blocked",
+                "paused",
+                "done"
+              ]
+            }
+          },
+          "required": [
+            "status",
+            "next_step",
+            "blocker"
+          ],
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "summary": {
+      "maxLength": 20000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "verification": {
+      "enum": [
+        "confirmed",
+        "needs_review"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "draft_id",
+    "project_id",
+    "record_type",
+    "occurred_at",
+    "summary",
+    "state_as_of",
+    "state_snapshot",
+    "source",
+    "evidence",
+    "verification",
+    "revision"
+  ],
+  "title": "draft-v1",
+  "type": "object"
+}

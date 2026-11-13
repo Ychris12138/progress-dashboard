@@ -1,0 +1,1 @@
+{"draft_id":"draft_one","evidence":"人工确认的测试记录","occurred_at":"2026-11-12","project_id":"proj_demo","record_type":"progress","revision":null,"schema_version":1,"source":null,"state_as_of":"2026-11-12","state_snapshot":{"blocker":null,"next_step":"编写导入工具","status":"active"},"summary":"完成数据模型设计","verification":"confirmed"}

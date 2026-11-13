@@ -1,0 +1,7 @@
+[project]
+name = "progress-dashboard"
+version = "0.1.0"
+description = "Local-first progress records and explicit public previews"
+requires-python = ">=3.12"
+dependencies = []
+
