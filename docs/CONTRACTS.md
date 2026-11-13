@@ -40,7 +40,7 @@ verify 同时检查 manifest 规范字节、seal、预览、候选数据集、�
 
 构建仅输出 index.html、styles.css、app.js、data.json、build.json。data.json 是展示模型：projects 保存项目、完整最新快照、证据时间、最新进展候选和最近录入时间；timeline 按上海日期分组，timed/untimed 分开稳定排序。UI 不重新猜测状态或合并快照。
 
-build.json 包含 built_at、commit、local_preview、synthetic、actions_url、data_changed_at。冻结候选使用批次创建时间，正式 Git 数据使用最近 public 提交时间；缺少可靠修改时间时为空，前端明确降级为最近录入时间。actions_url 本阶段为空；前端只接受 GitHub 的 Actions 页面或运行链接，不接受任意业务 URL。
+build.json 包含 built_at、commit、local_preview、synthetic、actions_url、data_changed_at。冻结候选使用批次创建时间，正式 Git 数据使用最近 public 提交时间；缺少可靠修改时间时为空，前端明确降级为最近录入时间。actions_url 从无凭据的 GitHub HTTPS origin 构造，否则为空；前端只接受 GitHub 的 Actions 页面或运行链接，不接受任意业务 URL。
 
 前端筛选以项目为单位：分类、当前状态、历史全文搜索共同确定项目集合，时间轴显示集合内的全部历史。日期精度仍显示原精度；同日时点与未知时间组不宣称相对先后。项目历史只包含当前有效公开版本，不包含本地修订 diff。
 

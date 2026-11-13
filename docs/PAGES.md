@@ -37,3 +37,14 @@
 - [并发队列语义](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency)
 
 实际运行与浏览器验收记录另见第四阶段交付报告。
+
+
+## 本次 Git 传输替代路径
+
+本机 Git HTTPS 端点不可达，SSH 443 入口的现有密钥也未获授权；没有修改用户凭据或主机信任。GitHub API 可用，因此在独立 bootstrap-seed 分支放入已审核 README 后，通过 Git Data API 重建源码树和原始根提交。上传前后 tree SHA 和 commit SHA 完全一致，再创建 main 并设为默认分支。后续提交只做父提交匹配的快进更新，不强推。
+
+引导分支不含业务数据且未部署；验收 PR 已关闭、不合并，测试分支作为证据保留。该传输回退仅用于已授权的代码和空站 bootstrap，不启用真实数据发布，也没有把访问 token 写入 Git URL 或文件。
+
+## 手机浏览器验收
+
+本机 CUA 的 Chrome、内置浏览器和原生应用控制在打开页面阶段超时，不能据此声称手机验收通过。为完成验收，另设只读 Browser acceptance 工作流，在 GitHub 托管 Linux 安装 Playwright 自带 Chromium，访问实际已部署 URL，检查 360px／390px 空状态、横向溢出、原生对话框和合成 JSON 下载。截图与结果作为 Actions artifact 保存；不具备 Pages 写权限。它不是实体 iPhone／Android 设备测试。

@@ -1,6 +1,6 @@
 # Git 初始化、发布与恢复
 
-第三阶段仅支持本地 bare 仓库。HTTP、SSH、file URL 和相对远程路径均拒绝；不调用 gh、不创建 GitHub 仓库、不部署。所有示例用合成数据。现有正式项目保持空公开数据，并未初始化 Git。
+第三阶段仅支持本地 bare 仓库。HTTP、SSH、file URL 和相对远程路径均拒绝；不调用 gh、不创建 GitHub 仓库、不部署。所有示例用合成数据。第三阶段验收时正式项目未初始化 Git；第四阶段已完成公开空站 bootstrap，见 PAGES.md。这里的 publish.py 仍保持本地 bare 限制。
 
 ## 一键保留验证现场
 

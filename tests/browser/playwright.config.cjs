@@ -7,6 +7,6 @@ module.exports = defineConfig({
   timeout: 45000,
   retries: 0,
   workers: 1,
-  reporter: [['list'], ['json', { outputFile: 'browser-results.json' }]],
+  reporter: [['list'], ['json', { outputFile: require('node:path').resolve(__dirname, '../../browser-results.json') }]],
   use: { browserName: 'chromium', trace: 'retain-on-failure' },
 });

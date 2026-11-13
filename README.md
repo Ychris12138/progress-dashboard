@@ -1,6 +1,10 @@
-# 个人进度看板 · 本地数据与前端
+# 个人进度看板
 
-本地数据引擎、前端和第三阶段 Git 事务已实现。正式公开数据为空，正在进行首次 GitHub Pages 空站部署，生产约束见 docs/PAGES.md。支持分类、搜索、状态筛选、项目历史、全局时间轴和本地记录入口。Git 发布当前只接受本地 bare 仓库，用于合成数据验证。
+[![Pages](https://github.com/Ychris12138/progress-dashboard/actions/workflows/pages.yml/badge.svg?branch=main&event=push)](https://github.com/Ychris12138/progress-dashboard/actions/workflows/pages.yml)
+
+[打开看板](https://ychris12138.github.io/progress-dashboard/) · [部署约束](docs/PAGES.md)
+
+本地数据引擎、前端和 Git 事务已实现，GitHub Pages 已完成首次空站部署。正式公开数据为空，生产工作流强制阻止非空业务数据。支持分类、搜索、状态筛选、项目历史、全局时间轴和本地记录入口。Git 发布当前只接受本地 bare 仓库，用于合成数据验证。
 
 日常流程：当前工作聊天生成草稿 → 本地导入 → 完整预览 → 用户确认批次 → 显式 publish。**approve 只保存本地批准凭据；只有 publish 才应用文件并提交、推送到已初始化的本地 bare 目标。** 本轮没有发布真实数据。
 
@@ -44,7 +48,7 @@ python3.12 -m http.server 0 --bind 127.0.0.1 --directory dist
 
 ## 开发验证
 
-Python 是运行依赖；Node 和 jsdom 仅用于开发测试，网页本身不依赖它们。使用 Node 24.19.0：
+Python 是运行依赖；Node、jsdom 和 Playwright 仅用于开发测试，网页本身不依赖它们。使用 Node 24.19.0：
 
 ```sh
 python3.12 -m unittest discover -s tests -v
@@ -53,7 +57,7 @@ PYTHON=python3.12 npm test
 node --check src/app.js
 ```
 
-DOM 测试不执行真实浏览器布局，也不代替 360px／390px 视觉验收。本轮结果和仍待验证事项见 [第二阶段报告](docs/PHASE2_REPORT.md)。
+DOM 测试不执行真实浏览器布局。第二阶段历史结果见 [第二阶段报告](docs/PHASE2_REPORT.md)，后续 Chromium 手机视口实测见 [第四阶段报告](docs/PHASE4_REPORT.md)。浏览器测试使用固定的开发依赖，仅在 GitHub Linux runner 安装浏览器。
 
 ## 最小本地流程
 
@@ -139,6 +143,6 @@ python3.12 scripts/demo_git.py --output /private/tmp/progress-dashboard-git-demo
 
 第一阶段测试涵盖独立格式、时间精度、状态选择、修订迁移、冻结审批、路径和隐私边界，以及来源故障恢复。具体实测结果见 docs/PHASE1_REPORT.md；含真实 ID 的 PoC 报告只在私有目录。
 
-第二阶段交互和手机响应式样式已实现；真实浏览器视觉检查因连接超时尚未完成。第三阶段已完成本地 bare 的发布和初始化验证，见 [第三阶段报告](docs/PHASE3_REPORT.md)。第四阶段才接入 GitHub 身份、公开空仓库和 Pages 空站部署；当前本地初始化凭据不表示这些外部步骤已经完成；第四阶段实测状态以部署报告为准。
+第二阶段交互和手机响应式样式已实现；后续真实浏览器验收结果以第四阶段报告为准。第三阶段已完成本地 bare 的发布和初始化验证，见 [第三阶段报告](docs/PHASE3_REPORT.md)。第四阶段已创建公开仓库并完成空站部署、PR／分支／失败保护实测，见 [部署报告](docs/PHASE4_REPORT.md)。真实进度发布仍未启用。
 
-仅检查的 CI 已配置 Python 3.12/3.14、Node 24.19.0 DOM 测试和临时合成构建，Actions 使用核验后的官方完整 SHA，没有部署权限或上传步骤。尚无远程运行，不能把配置完成当作 CI 通过。
+GitHub 上的 Python 3.12／3.14 和前端检查已实际通过。生产 Pages 工作流按 Job 最小授权，只有 deploy Job 可写 Pages。只读 Browser acceptance 工作流在独立 Linux Chromium 中检查线上空站；不在本机启动系统 Chrome。
